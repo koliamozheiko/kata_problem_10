@@ -8,19 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
-import java.util.List;
 
 @Controller
 public class AdminController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 
