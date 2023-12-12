@@ -16,21 +16,15 @@ import java.util.List;
 
 @Controller
 public class RegistrationController {
-    private UserService userService;
-    private RoleRepository roleRepository;
+    private final UserService userService;
 
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
-    @Autowired
-    public void setUserService(UserService userService) {
+    public RegistrationController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        List<Role> allRoles = roleRepository.findAll();
         model.addAttribute("userForm", new User());
         return "registration";
     }
@@ -44,8 +38,6 @@ public class RegistrationController {
         if(userService.saveDefaultUser(userForm)) {
             return "registration";
         }
-
-
 
         return "redirect:login";
     }

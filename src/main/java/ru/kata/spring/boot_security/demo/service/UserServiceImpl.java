@@ -4,10 +4,13 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
@@ -22,7 +25,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    @Lazy
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -41,8 +43,6 @@ public class UserServiceImpl implements UserService {
         if (user == null ) {
             throw new UsernameNotFoundException(String.format("User '%s' not found", email));
         }
-
-        Hibernate.initialize(user.getRoles());
         return user;
     }
     @Override
@@ -78,11 +78,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean updateUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()) != null) {
-            if (userRepository.findByUsername(user.getUsername()).getId() != user.getId()) {
-                return false;
-            }
-        }
         if (!user.getPassword().equals(userRepository.findByUsername(user.getUsername()).getPassword())) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
