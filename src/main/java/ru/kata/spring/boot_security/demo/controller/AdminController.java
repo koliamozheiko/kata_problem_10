@@ -43,7 +43,6 @@ public class AdminController {
         if (!userService.updateUser(user)) {
             return "admin";
         }
-        userService.updateUser(user);
         return "redirect:/admin";
     }
 
