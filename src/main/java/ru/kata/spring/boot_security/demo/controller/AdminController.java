@@ -40,9 +40,7 @@ public class AdminController {
 
     @PostMapping("/edit")
     public String updateUser(@ModelAttribute("userForEdit") User user) {
-        if (!userService.updateUser(user)) {
-            return "admin";
-        }
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
@@ -54,9 +52,7 @@ public class AdminController {
 
     @PostMapping("/new")
     public String createNewUser(@ModelAttribute("newUser") User user) {
-        if(!userService.saveDefaultUser(user)) {
-            return "redirect:/admin";
-        }
+        userService.saveDefaultUser(user);
         return "redirect:/admin";
     }
 }
